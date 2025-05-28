@@ -756,7 +756,7 @@ The `LIKE` operator is used to search for a specified pattern in a column.
 - **Case-insensitive matching with `ILIKE`:**
 
   ```sql
-  SELECT * FROM students WHERE firstname ILIKE 'a%'; --gives names starting with 'A'.
+  SELECT * FROM students WHERE firstname ILIKE 'a%'; --gives names starting with 'A' / 'a'.
 
   ```
 
@@ -843,7 +843,7 @@ FROM table_name;
 
 ### **28. Custom User-Defined Function Example:**
 
-```
+```sql
 CREATE FUNCTION add_numbers(a INT, b INT)
 RETURNS INT AS $$
 BEGIN
@@ -853,20 +853,57 @@ $$ LANGUAGE plpgsql;
 ```
  Call it:
 
-```
+```sql
 SELECT add_numbers(3, 5);  -- Returns 8
 
 ```
 
 ---
 ## **Clarifying SQL: Logical vs. Written Order**
-## Cheatsheet on WHERE GROUP BY HAVING
-```
-SELECT region, customer, SUM(amount) AS total_spent
-FROM orders                 -- Step 1: From table
-WHERE status = 'complete'   -- Step 2: Filter rows
-GROUP BY region, customer   -- Step 3: Group rows
-HAVING SUM(amount) > 250    -- Step 4: Filter groups
-ORDER BY total_spent DESC;  -- Step 6: Sort results
+## Cheatsheet on WHERE -- GROUP BY -- HAVING
+```sql
+SELECT region, customer, SUM(amount) AS total_spent        -- Step 5: Select Data
+FROM orders                                                -- Step 1: From table
+WHERE status = 'complete'                                  -- Step 2: Filter rows
+GROUP BY region, customer                                  -- Step 3: Group rows
+HAVING SUM(amount) > 250                                   -- Step 4: Filter groups
+ORDER BY total_spent DESC;                                 -- Step 6: Sort results
 ```
 ----
+
+## **VIEW**
+
+```sql
+--CREATING
+CREATE VIEW customer_totals AS
+SELECT customer, SUM(amount) AS total_spent
+FROM orders
+WHERE status = 'complete'
+GROUP BY customer;
+--QUERY
+SELECT * FROM customer_totals;
+--REPLACE
+CREATE OR REPLACE VIEW completed_orders AS
+---(same as create but with updated as needed)
+--DROPING
+DROP VIEW customer_totals;
+--UPDATING
+UPDATE completed_orders
+SET amount = 250
+WHERE id = 1;
+--(Allowed only if simple, no JOINS in view)
+```
+
+## **USE CASES**
+
+A VIEW is like a virtual table in your database. It doesn’t store data itself but shows data derived from one or more tables through a saved SQL query.
+
+You can select from a VIEW just like a table.
+
+Views simplify complex queries and improve security by exposing only certain columns or rows.
+
+Hide sensitive data (e.g., show only needed columns)
+
+Reuse SQL logic/query without rewriting
+
+Make code easier to maintain
