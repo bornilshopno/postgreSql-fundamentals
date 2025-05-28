@@ -826,3 +826,47 @@ SELECT * FROM students LIMIT 5 OFFSET 5 * 2;  -- Rows 12-17
 ```
 
 ---
+
+### **27.Basic Syntax of CASE**
+```sql
+SELECT
+  column_name,
+  CASE
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    ELSE default_result
+  END AS alias_name
+FROM table_name;
+```
+
+---
+
+### **28. Custom User-Defined Function Example:**
+
+```
+CREATE FUNCTION add_numbers(a INT, b INT)
+RETURNS INT AS $$
+BEGIN
+  RETURN a + b;
+END;
+$$ LANGUAGE plpgsql;
+```
+ Call it:
+
+```
+SELECT add_numbers(3, 5);  -- Returns 8
+
+```
+
+---
+## **Clarifying SQL: Logical vs. Written Order**
+## Cheatsheet on WHERE GROUP BY HAVING
+```
+SELECT region, customer, SUM(amount) AS total_spent
+FROM orders                 -- Step 1: From table
+WHERE status = 'complete'   -- Step 2: Filter rows
+GROUP BY region, customer   -- Step 3: Group rows
+HAVING SUM(amount) > 250    -- Step 4: Filter groups
+ORDER BY total_spent DESC;  -- Step 6: Sort results
+```
+----
