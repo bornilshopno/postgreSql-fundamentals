@@ -894,7 +894,7 @@ WHERE id = 1;
 --(Allowed only if simple, no JOINS in view)
 ```
 
-## **USE CASES**
+#### **USE CASES OF VIEW**
 
 A VIEW is like a virtual table in your database. It doesn’t store data itself but shows data derived from one or more tables through a saved SQL query.
 
@@ -907,3 +907,23 @@ Hide sensitive data (e.g., show only needed columns)
 Reuse SQL logic/query without rewriting
 
 Make code easier to maintain
+-------------------------
+
+## **FILTER IN POSTGRESQL**
+
+FILTER is used with aggregate functions like COUNT(), SUM(), AVG(), etc., to apply a condition only to that function — without affecting the rest of the query.
+
+### Basic Syntax
+```sql
+AGGREGATE_FUNCTION(*) FILTER (WHERE condition)
+```
+### Example Case
+```sql
+SELECT 
+  genre,
+  COUNT(*) AS total_loans,
+  COUNT(*) FILTER (WHERE return_date IS NULL) AS still_borrowed
+FROM books
+NATURAL JOIN loans
+GROUP BY genre;
+```
